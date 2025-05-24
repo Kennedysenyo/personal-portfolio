@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import profile from "../../public/img/profile.jpg";
 
 export function Hero() {
   return (
@@ -60,10 +61,9 @@ export function Hero() {
           <div className="flex items-center justify-center">
             <div className="border-primary relative aspect-square h-[280px] w-[280px] overflow-hidden rounded-full border-4 md:h-[350px] md:w-[350px]">
               <Image
-                src="/img/profile.jpg"
+                src={profile}
                 alt="Profile"
-                width={350}
-                height={350}
+                fill
                 className="object-cover"
                 priority
               />
