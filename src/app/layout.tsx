@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Kennedy Senyo Dordoe",
-  description: "Fullstack developer.",
+  description: "🚀 Full Stack Next.js Developer",
 };
 
 export default function RootLayout({

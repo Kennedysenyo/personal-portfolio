@@ -1,5 +1,7 @@
 "use server";
 
+import { sendEmail } from "@/lib/mailer";
+
 export type FormFields = {
   name?: string;
   email?: string;
@@ -33,5 +35,12 @@ export const validateMessageForm = async (
     return { errors, success: false, errorMessage: null };
 
   // Send email logic here
+  const response = await sendEmail(name, email, message);
+  if (response)
+    return {
+      errors: {},
+      success: false,
+      errorMessage: "Failed to send Message",
+    };
   return { errors: {}, success: true, errorMessage: null };
 };

@@ -168,6 +168,11 @@ export function Contact() {
                       Message sent successfully! I'll get back to you soon.
                     </p>
                   )}
+                  {state.errorMessage && (
+                    <p className="text-sm font-medium text-red-600">
+                      Message Sending Failed! Please try again.
+                    </p>
+                  )}
                 </form>
               </CardContent>
             </Card>
