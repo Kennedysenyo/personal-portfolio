@@ -1,8 +1,11 @@
+import { Header } from "@/components/Header";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import type { Metadata } from "next";
+import "./globals.css";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "KenCoding",
+  title: "Kennedy Senyo Dordoe",
   description: "Fullstack developer.",
 };
 
@@ -12,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider
           attribute="class"
@@ -20,8 +23,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
+          <div className="flex min-h-screen flex-col">
+            <Header />
             <main className="flex-1">{children}</main>
+            <Footer />
           </div>
         </ThemeProvider>
       </body>
