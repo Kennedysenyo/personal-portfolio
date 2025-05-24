@@ -62,7 +62,8 @@ export function Hero() {
               <Image
                 src="/img/profile.jpg"
                 alt="Profile"
-                fill
+                width={350}
+                height={350}
                 className="object-cover"
                 priority
               />
