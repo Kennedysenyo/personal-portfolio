@@ -21,7 +21,7 @@ export function Projects() {
       title: "Assembly Endgame",
       description:
         "Assembly Endgame is a thrilling word-guessing game inspired by the classic Hangman.",
-      image: "/images/assembly-endgame.jpg",
+      image: "/img/assembly-endgame.jpg",
       tags: ["React"],
       liveUrl: "https://kcassemblyendgame.netlify.app/",
       githubUrl: "https://github.com/Kennedysenyo/Assembly-Endgame",
@@ -31,7 +31,7 @@ export function Projects() {
       title: "Tenzies Game",
       description:
         "A simple and interactive game built with React where players roll dice to match all numbers and win! The goal is to get all the dice to show the same number.",
-      image: "/images/tenzies.jpg",
+      image: "/img/tenzies.jpg",
       tags: ["React"],
       liveUrl: "https://kctenzies.netlify.app/",
       githubUrl: "https://github.com/Kennedysenyo/Tenzies",
