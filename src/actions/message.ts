@@ -36,7 +36,7 @@ export const validateMessageForm = async (
   try {
     // await sendEmail(name, email, message);
     return { errors: {}, success: true, errorMessage: null };
-  } catch (err) {
+  } catch (_err) {
     return {
       errors: {},
       success: false,
