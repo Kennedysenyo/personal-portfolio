@@ -17,10 +17,15 @@ export const sendEmail = async (senderName, senderEmail, message) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    if (!info.messageId) throw new Error("Message sending Failed");
     return null;
   } catch (error) {
+    if (error instanceof Error) {
+      console.error(error);
+      return error.message;
+    }
     console.error(error);
-    return "Message sending Failed";
+    return error;
   }
 };
