@@ -1,4 +1,4 @@
-import { Code, Database, Globe, Layout, Palette, Server } from "lucide-react";
+import { Code, Database, Globe, Layout, Server } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -43,10 +43,8 @@ export function Skills() {
               <CardContent className="space-y-2">
                 <ul className="list-disc space-y-1 pl-5">
                   <li>Node.js / Express</li>
-                  <li>Python / Django</li>
                   <li>RESTful APIs</li>
-                  <li>GraphQL</li>
-                  <li>Authentication / Security</li>
+                  <li>Authentication & Authorization</li>
                 </ul>
               </CardContent>
             </Card>
@@ -60,10 +58,8 @@ export function Skills() {
               <CardContent className="space-y-2">
                 <ul className="list-disc space-y-1 pl-5">
                   <li>PostgreSQL</li>
-                  <li>MySQL</li>
                   <li>Supabase</li>
                   <li>MongoDB</li>
-                  <li>Redis</li>
                 </ul>
               </CardContent>
             </Card>
@@ -71,14 +67,11 @@ export function Skills() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="text-primary h-5 w-5" />
-                  DevOps & Deployment
+                  Deployment & Tools
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <ul className="list-disc space-y-1 pl-5">
-                  <li>Docker / Kubernetes</li>
-                  <li>CI/CD Pipelines</li>
-                  <li>AWS / GCP / Azure</li>
                   <li>Vercel / Netlify</li>
                   <li>Git / GitHub</li>
                 </ul>
@@ -88,33 +81,14 @@ export function Skills() {
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2">
                   <Layout className="text-primary h-5 w-5" />
-                  Tools & Methodologies
+                  Best Practices
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <ul className="list-disc space-y-1 pl-5">
-                  <li>Agile / Scrum</li>
-                  <li>Test-Driven Development</li>
                   <li>Responsive Design</li>
                   <li>Performance Optimization</li>
                   <li>Accessibility (WCAG)</li>
-                </ul>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="text-primary h-5 w-5" />
-                  Design & UI/UX
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <ul className="list-disc space-y-1 pl-5">
-                  <li>Figma / Adobe XD</li>
-                  <li>UI/UX Principles</li>
-                  <li>Design Systems</li>
-                  <li>Wireframing</li>
-                  <li>Prototyping</li>
                 </ul>
               </CardContent>
             </Card>

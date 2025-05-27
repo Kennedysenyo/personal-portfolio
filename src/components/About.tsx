@@ -13,13 +13,13 @@ export function About() {
           </div>
           <div className="mx-auto max-w-3xl space-y-4 text-left">
             <p>
-              I'm a dedicated full-stack developer with a strong foundation in
-              Computer Science, currently pursuing my degree at the University
-              of the People. I specialize in building modern, responsive web
-              applications using Next.js and React, with a focus on delivering
-              seamless user experiences across all devices. Whether it's
-              building from scratch or improving existing systems, I bring both
-              precision and creativity to every project I take on.
+              Hi! I'm a fullstack developer specializing in building fast,
+              scalable, and beautiful web applications using{" "}
+              <strong>Next.js</strong> and modern technologies. I build
+              fullstack apps using TypeScript, Tailwind CSS, and
+              Supabase/PostgreSQL, leveraging Next.js features like server
+              components, API routes, and server actions to create efficient and
+              clean user experiences.
             </p>
             <p>
               My development journey has been shaped by hands-on projects that

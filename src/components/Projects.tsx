@@ -74,7 +74,7 @@ export function Projects() {
                     ))}
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-between">
+                <CardFooter className="flex justify-between gap-2">
                   <Button asChild variant="outline" size="sm">
                     <Link
                       href={project.githubUrl}

@@ -88,7 +88,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-muted-foreground text-sm">
-                      +233 (054) 574-4331
+                      +233 (0) 545-744-331
                     </p>
                   </div>
                 </div>
