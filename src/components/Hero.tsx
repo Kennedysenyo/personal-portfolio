@@ -60,7 +60,7 @@ export function Hero() {
           <div className="flex items-center justify-center">
             <div className="border-primary relative aspect-square h-[280px] w-[280px] overflow-hidden rounded-full border-4 md:h-[350px] md:w-[350px]">
               <Image
-                src="/img/profile.jpg"
+                src="/img/me.jpg"
                 alt="Profile"
                 fill
                 className="object-cover"

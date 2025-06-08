@@ -29,7 +29,7 @@ export function Skills() {
                   <li>TypeScript / JavaScript</li>
                   <li>HTML5 / CSS3</li>
                   <li>Tailwind CSS</li>
-                  <li>Redux / Context API</li>
+                  <li>Context API</li>
                 </ul>
               </CardContent>
             </Card>
@@ -44,7 +44,7 @@ export function Skills() {
                 <ul className="list-disc space-y-1 pl-5">
                   <li>Node.js / Express</li>
                   <li>RESTful APIs</li>
-                  <li>Authentication & Authorization</li>
+                  <li>Authentication / Security</li>
                 </ul>
               </CardContent>
             </Card>
@@ -59,7 +59,7 @@ export function Skills() {
                 <ul className="list-disc space-y-1 pl-5">
                   <li>PostgreSQL</li>
                   <li>Supabase</li>
-                  <li>MongoDB</li>
+                  <li>MySQL</li>
                 </ul>
               </CardContent>
             </Card>
