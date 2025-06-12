@@ -79,7 +79,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-muted-foreground text-sm">
-                      kennedysenyo@gmail.com
+                      contact@kencoding.dev
                     </p>
                   </div>
                 </div>
