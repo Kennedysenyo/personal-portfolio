@@ -24,6 +24,32 @@ export const validateMessageForm = async (
   const email = formData.get("email")?.toString().trim() || "";
   const message = formData.get("message")?.toString().trim() || "";
 
+  // Honeypot check
+  if (formData.get("company")) {
+    return {
+      success: false,
+      errorMessage: "Spam detected",
+      errors: {},
+    };
+  }
+
+  // reCAPTCHA check
+  const token = formData.get("g-recaptcha-response") as string;
+  const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
+  });
+  const data = await res.json();
+
+  if (!data.success || data.score < 0.5) {
+    return {
+      success: false,
+      errorMessage: "Suspicious activity detected.",
+      errors: {},
+    };
+  }
+
   const errors: FormFields = {};
 
   if (!name) errors.name = "Name is required";

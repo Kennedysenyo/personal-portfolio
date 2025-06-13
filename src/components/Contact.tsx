@@ -1,8 +1,9 @@
 "use client";
+declare const grecaptcha: any;
 
 import type React from "react";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ export function Contact() {
     email: "",
     message: "",
   });
-
+  const [token, setToken] = useState("");
   const handleFormChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -39,6 +40,31 @@ export function Contact() {
     errors: {},
     success: false,
     errorMessage: null,
+  };
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  const tokenRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const token = await grecaptcha.execute(
+      "6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq",
+      { action: "submit" },
+    );
+
+    if (tokenRef.current) {
+      tokenRef.current.value = token;
+    }
+
+    e.currentTarget.submit();
   };
 
   const [state, formAction, isPending] = useActionState(
@@ -112,7 +138,11 @@ export function Contact() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form action={formAction} className="space-y-4">
+                <form
+                  action={formAction}
+                  onSubmit={handleSubmit}
+                  className="space-y-4"
+                >
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
                     <Input
@@ -144,6 +174,12 @@ export function Contact() {
                       </p>
                     )}
                   </div>
+                  <input
+                    type="text"
+                    name="company"
+                    style={{ display: "none" }}
+                  />
+
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
                     <Textarea
@@ -160,6 +196,13 @@ export function Contact() {
                       </p>
                     )}
                   </div>
+
+                  <input
+                    type="hidden"
+                    name="g-recaptcha-response"
+                    ref={tokenRef}
+                  />
+
                   <Button type="submit" className="w-full" disabled={isPending}>
                     {isPending ? "Sending..." : "Send Message"}
                   </Button>
