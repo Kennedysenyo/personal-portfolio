@@ -3,9 +3,9 @@
 import { sendEmail } from "@/lib/mailer";
 
 export type FormFields = {
-  name?: string;
-  email?: string;
-  message?: string;
+  name: string;
+  email: string;
+  message: string;
 };
 
 export type FormState = {

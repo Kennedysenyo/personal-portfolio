@@ -36,6 +36,13 @@ export function Contact() {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const initialState: FormState = {
     errors: {},
     success: false,
@@ -57,22 +64,17 @@ export function Contact() {
 
       const script = document.createElement("script");
       script.id = "recaptcha-script";
-      script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.RECAPTCHA_SITE_KEY}`;
+      script.src = `https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq`;
       script.async = true;
       script.defer = true;
+
       document.body.appendChild(script);
     };
 
     loadReCaptcha();
   }, []);
 
-  const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
+  // handle the form submit -- HiJack
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
