@@ -53,13 +53,13 @@ export function Contact() {
     const loadReCaptcha = () => {
       if (
         document.querySelector("#recaptcha-script") ||
-        !process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+        !process.env.RECAPTCHA_SITE_KEY
       )
         return;
 
       const script = document.createElement("script");
       script.id = "recaptcha-script";
-      script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`;
+      script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.RECAPTCHA_SITE_KEY}`;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
@@ -89,7 +89,7 @@ export function Contact() {
       );
 
       const token = await window.grecaptcha.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+        process.env.RECAPTCHA_SITE_KEY!,
         { action: "submit" },
       );
 
@@ -149,7 +149,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-muted-foreground text-sm">
-                      contact@example.com
+                      contact@kencoding.com
                     </p>
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-muted-foreground text-sm">
-                      +1 (555) 123-4567
+                      +233 (0) 545-744-331
                     </p>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Location</h3>
                     <p className="text-muted-foreground text-sm">
-                      San Francisco, CA
+                      Accra, Ghana
                     </p>
                   </div>
                 </div>
