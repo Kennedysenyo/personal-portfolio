@@ -26,7 +26,7 @@ export function Contact() {
     email: "",
     message: "",
   });
-  const [token, setToken] = useState("");
+
   const handleFormChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
