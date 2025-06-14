@@ -54,25 +54,25 @@ export function Contact() {
     initialState,
   );
 
-  useEffect(() => {
-    const loadReCaptcha = () => {
-      if (
-        document.querySelector("#recaptcha-script") ||
-        !process.env.RECAPTCHA_SITE_KEY
-      )
-        return;
+  // useEffect(() => {
+  //   const loadReCaptcha = () => {
+  //     if (
+  //       document.querySelector("#recaptcha-script") ||
+  //       !process.env.RECAPTCHA_SITE_KEY
+  //     )
+  //       return;
 
-      const script = document.createElement("script");
-      script.id = "recaptcha-script";
-      script.src = `https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq`;
-      script.async = true;
-      script.defer = true;
+  //     const script = document.createElement("script");
+  //     script.id = "recaptcha-script";
+  //     script.src = `https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq`;
+  //     script.async = true;
+  //     script.defer = true;
 
-      document.body.appendChild(script);
-    };
+  //     document.body.appendChild(script);
+  //   };
 
-    loadReCaptcha();
-  }, []);
+  //   loadReCaptcha();
+  // }, []);
 
   // handle the form submit -- HiJack
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -183,6 +183,7 @@ export function Contact() {
               <CardContent>
                 <form
                   ref={formRef}
+                  action={formAction}
                   onSubmit={handleSubmit}
                   className="space-y-4"
                 >
@@ -281,6 +282,7 @@ export function Contact() {
           </div>
         </div>
       </div>
+      <script src="https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq"></script>
     </section>
   );
 }
