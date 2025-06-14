@@ -1,5 +1,4 @@
 "use client";
-import type React from "react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,15 +14,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FormFields, FormState, validateMessageForm } from "@/actions/message";
 
+type Grecaptcha = {
+  ready: (callback: () => void) => void;
+  execute: (siteKey: string, options: { action: string }) => Promise<string>;
+};
+
 declare global {
   interface Window {
-    grecaptcha: {
-      ready: (cb: () => void) => void;
-      execute: (
-        siteKey: string,
-        options: { action: string },
-      ) => Promise<string>;
-    };
+    grecaptcha: Grecaptcha;
   }
 }
 
@@ -114,7 +112,6 @@ export function Contact() {
   useEffect(() => {
     if (state.success) {
       setFormData({ name: "", email: "", message: "" });
-      // Reset form after success
       setTimeout(() => {
         if (formRef.current) {
           formRef.current.reset();
@@ -221,7 +218,6 @@ export function Contact() {
                       </p>
                     )}
                   </div>
-                  {/* Honeypot field */}
                   <input
                     type="text"
                     name="company"
