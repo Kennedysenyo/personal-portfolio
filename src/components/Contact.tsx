@@ -1,5 +1,6 @@
 "use client";
 declare const grecaptcha: {
+  ready: (cb: () => void) => void;
   execute: (siteKey: string, options: { action: string }) => Promise<string>;
 };
 
@@ -45,7 +46,10 @@ export function Contact() {
   };
 
   useEffect(() => {
+    if (document.querySelector("#recaptcha-script")) return;
+
     const script = document.createElement("script");
+    script.id = "recaptcha-script";
     script.src =
       "https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq";
     script.async = true;
@@ -62,6 +66,8 @@ export function Contact() {
       return;
     }
 
+    await new Promise<void>((resolve) => grecaptcha.ready(() => resolve()));
+
     const token = await grecaptcha.execute(
       "6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq",
       { action: "submit" },
@@ -71,7 +77,9 @@ export function Contact() {
       tokenRef.current.value = token;
     }
 
-    e.currentTarget.submit();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    formAction(formData);
   };
 
   const [state, formAction, isPending] = useActionState(
