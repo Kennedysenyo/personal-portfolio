@@ -1,14 +1,7 @@
 "use client";
-declare const grecaptcha: {
-  ready: (cb: () => void) => void;
-  execute: (siteKey: string, options: { action: string }) => Promise<string>;
-};
-
 import type React from "react";
-
 import { useActionState, useEffect, useRef, useState } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,64 +15,33 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FormFields, FormState, validateMessageForm } from "@/actions/message";
 
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (cb: () => void) => void;
+      execute: (
+        siteKey: string,
+        options: { action: string },
+      ) => Promise<string>;
+    };
+  }
+}
+
 export function Contact() {
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formData, setFormData] = useState<FormFields>({
     name: "",
     email: "",
     message: "",
   });
 
-  const handleFormChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const tokenRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialState: FormState = {
     errors: {},
     success: false,
-    errorMessage: null,
-  };
-
-  useEffect(() => {
-    if (document.querySelector("#recaptcha-script")) return;
-
-    const script = document.createElement("script");
-    script.id = "recaptcha-script";
-    script.src =
-      "https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
-  const tokenRef = useRef<HTMLInputElement>(null);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!window.grecaptcha || !grecaptcha.execute) {
-      alert("reCAPTCHA not ready. Please try again.");
-      return;
-    }
-
-    await new Promise<void>((resolve) => grecaptcha.ready(() => resolve()));
-
-    const token = await grecaptcha.execute(
-      "6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq",
-      { action: "submit" },
-    );
-
-    if (tokenRef.current) {
-      tokenRef.current.value = token;
-    }
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    formAction(formData);
+    message: null,
   };
 
   const [state, formAction, isPending] = useActionState(
@@ -88,11 +50,78 @@ export function Contact() {
   );
 
   useEffect(() => {
+    const loadReCaptcha = () => {
+      if (
+        document.querySelector("#recaptcha-script") ||
+        !process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+      )
+        return;
+
+      const script = document.createElement("script");
+      script.id = "recaptcha-script";
+      script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    };
+
+    loadReCaptcha();
+  }, []);
+
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      if (!window.grecaptcha || !window.grecaptcha.execute) {
+        throw new Error("reCAPTCHA not ready");
+      }
+
+      await new Promise<void>((resolve) =>
+        window.grecaptcha.ready(() => resolve()),
+      );
+
+      const token = await window.grecaptcha.execute(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+        { action: "submit" },
+      );
+
+      if (tokenRef.current) {
+        tokenRef.current.value = token;
+      }
+
+      const formData = new FormData(e.currentTarget);
+      formAction(formData);
+    } catch (error) {
+      console.error("Submission error:", error);
+      if (formRef.current) {
+        formRef.current.dispatchEvent(
+          new Event("submit", { cancelable: true, bubbles: true }),
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
     if (state.success) {
       setFormData({ name: "", email: "", message: "" });
-      setSubmitSuccess(true);
+      // Reset form after success
+      setTimeout(() => {
+        if (formRef.current) {
+          formRef.current.reset();
+        }
+      }, 3000);
     }
-  }, [state]);
+  }, [state.success]);
 
   return (
     <section id="contact" className="py-16">
@@ -120,7 +149,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-muted-foreground text-sm">
-                      contact@kencoding.dev
+                      contact@example.com
                     </p>
                   </div>
                 </div>
@@ -129,7 +158,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-muted-foreground text-sm">
-                      +233 (0) 545-744-331
+                      +1 (555) 123-4567
                     </p>
                   </div>
                 </div>
@@ -138,7 +167,7 @@ export function Contact() {
                   <div>
                     <h3 className="font-medium">Location</h3>
                     <p className="text-muted-foreground text-sm">
-                      Eastern Region, Ghana.
+                      San Francisco, CA
                     </p>
                   </div>
                 </div>
@@ -154,58 +183,65 @@ export function Contact() {
               </CardHeader>
               <CardContent>
                 <form
+                  ref={formRef}
                   action={formAction}
                   onSubmit={handleSubmit}
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Name *</Label>
                     <Input
                       id="name"
                       name="name"
                       placeholder="Your name"
                       value={formData.name}
                       onChange={handleFormChange}
+                      disabled={isPending}
                     />
-                    {state.errors.name && (
+                    {state.errors?.name && (
                       <p className="text-start text-xs text-red-500">
                         {state.errors.name}
                       </p>
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email *</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="Your email"
+                      placeholder="your.email@example.com"
                       value={formData.email}
                       onChange={handleFormChange}
+                      disabled={isPending}
                     />
-                    {state.errors.email && (
+                    {state.errors?.email && (
                       <p className="text-start text-xs text-red-500">
                         {state.errors.email}
                       </p>
                     )}
                   </div>
+                  {/* Honeypot field */}
                   <input
                     type="text"
                     name="company"
-                    style={{ display: "none" }}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    className="hidden"
                   />
 
                   <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
+                    <Label htmlFor="message">Message *</Label>
                     <Textarea
                       id="message"
                       name="message"
-                      placeholder="Your message"
+                      placeholder="Your message (10-2000 characters)"
                       className="min-h-[120px]"
                       value={formData.message}
                       onChange={handleFormChange}
+                      disabled={isPending}
                     />
-                    {state.errors.message && (
+                    {state.errors?.message && (
                       <p className="text-start text-xs text-red-500">
                         {state.errors.message}
                       </p>
@@ -218,17 +254,28 @@ export function Contact() {
                     ref={tokenRef}
                   />
 
-                  <Button type="submit" className="w-full" disabled={isPending}>
-                    {isPending ? "Sending..." : "Send Message"}
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isPending || isSubmitting}
+                  >
+                    {isPending || isSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Sending...
+                      </span>
+                    ) : (
+                      "Send Message"
+                    )}
                   </Button>
-                  {submitSuccess && (
-                    <p className="text-sm font-medium text-green-600">
-                      Message sent successfully! I'll get back to you soon.
-                    </p>
-                  )}
-                  {state.errorMessage && (
-                    <p className="text-sm font-medium text-red-600">
-                      Message Sending Failed! Please try again.
+
+                  {state.message && (
+                    <p
+                      className={`text-sm font-medium ${
+                        state.success ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {state.message}
                     </p>
                   )}
                 </form>

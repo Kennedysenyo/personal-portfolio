@@ -9,9 +9,9 @@ export type FormFields = {
 };
 
 export type FormState = {
-  errors: FormFields;
+  errors: Partial<FormFields>;
   success: boolean;
-  errorMessage: string | null;
+  message: string | null;
 };
 
 export const validateMessageForm = async (
@@ -20,53 +20,92 @@ export const validateMessageForm = async (
 ): Promise<FormState> => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
+  // Get and trim form data
   const name = formData.get("name")?.toString().trim() || "";
   const email = formData.get("email")?.toString().trim() || "";
   const message = formData.get("message")?.toString().trim() || "";
+  const company = formData.get("company")?.toString().trim();
 
   // Honeypot check
-  if (formData.get("company")) {
+  if (company) {
+    console.warn("Spam detected - honeypot field filled");
     return {
       success: false,
-      errorMessage: "Spam detected",
+      message: "Submission failed",
       errors: {},
     };
   }
 
-  // reCAPTCHA check
-  const token = formData.get("g-recaptcha-response") as string;
-  const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
-  });
-  const data = await res.json();
+  // reCAPTCHA verification
+  try {
+    const token = formData.get("g-recaptcha-response")?.toString() || "";
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
+    });
 
-  if (!data.success || data.score < 0.5) {
+    const data = await res.json();
+    console.log("reCAPTCHA score:", data.score);
+
+    if (!data.success || data.score < 0.3) {
+      // Adjusted threshold
+      console.warn("reCAPTCHA verification failed", data);
+      return {
+        success: false,
+        message: "Verification failed. Please try again.",
+        errors: {},
+      };
+    }
+  } catch (error) {
+    console.error("reCAPTCHA verification error:", error);
     return {
       success: false,
-      errorMessage: "Suspicious activity detected.",
+      message: "Verification service unavailable. Please try again later.",
       errors: {},
     };
   }
 
-  const errors: FormFields = {};
+  // Field validation
+  const errors: Partial<FormFields> = {};
 
   if (!name) errors.name = "Name is required";
+  else if (name.length > 100) errors.name = "Name is too long";
+
   if (!email) errors.email = "Email is required";
-  else if (!emailRegex.test(email)) errors.email = "Enter a valid email";
-  if (!message) errors.message = "Can't send empty message!";
+  else if (!emailRegex.test(email)) errors.email = "Please enter a valid email";
+  else if (email.length > 255) errors.email = "Email is too long";
 
-  if (Object.keys(errors).length > 0)
-    return { errors, success: false, errorMessage: null };
+  if (!message) errors.message = "Message cannot be empty";
+  else if (message.length < 10) errors.message = "Message is too short";
+  else if (message.length > 2000) errors.message = "Message is too long";
 
-  // Send email logic here
-  const response = await sendEmail(name, email, message);
-  if (response)
+  if (Object.keys(errors).length > 0) {
+    return {
+      errors,
+      success: false,
+      message: "Please fix the errors in the form",
+    };
+  }
+
+  // Send email
+  try {
+    const emailSent = await sendEmail(name, email, message);
+    if (!emailSent) {
+      throw new Error("Email service returned failure");
+    }
+
+    return {
+      errors: {},
+      success: true,
+      message: "Message sent successfully!",
+    };
+  } catch (error) {
+    console.error("Email sending error:", error);
     return {
       errors: {},
       success: false,
-      errorMessage: "Failed to send Message",
+      message: "Failed to send message. Please try again later.",
     };
-  return { errors: {}, success: true, errorMessage: null };
+  }
 };
