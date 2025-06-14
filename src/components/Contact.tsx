@@ -1,5 +1,7 @@
 "use client";
-declare const grecaptcha: any;
+declare const grecaptcha: {
+  execute: (siteKey: string, options: { action: string }) => Promise<string>;
+};
 
 import type React from "react";
 
@@ -54,6 +56,11 @@ export function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!window.grecaptcha || !grecaptcha.execute) {
+      alert("reCAPTCHA not ready. Please try again.");
+      return;
+    }
 
     const token = await grecaptcha.execute(
       "6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq",
