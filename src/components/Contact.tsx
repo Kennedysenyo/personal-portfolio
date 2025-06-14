@@ -183,7 +183,6 @@ export function Contact() {
               <CardContent>
                 <form
                   ref={formRef}
-                  action={formAction}
                   onSubmit={handleSubmit}
                   className="space-y-4"
                 >
