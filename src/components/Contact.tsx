@@ -55,6 +55,26 @@ export function Contact() {
     initialState,
   );
 
+  useEffect(() => {
+    const scriptId = "recaptcha-script";
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+    if (!siteKey) {
+      console.error("Missing reCAPTCHA site key");
+      return;
+    }
+
+    // If script already exists, do nothing
+    if (document.getElementById(scriptId)) return;
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -248,11 +268,6 @@ export function Contact() {
                       {state.message}
                     </p>
                   )}
-                  <script
-                    src="https://www.google.com/recaptcha/api.js?render=6LcVm2ErAAAAAJOprChiUWt86XP9BygR_RnHeyaW"
-                    async
-                    defer
-                  ></script>
                 </form>
               </CardContent>
             </Card>
