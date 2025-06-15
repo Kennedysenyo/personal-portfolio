@@ -248,7 +248,11 @@ export function Contact() {
                       {state.message}
                     </p>
                   )}
-                  <script src="https://www.google.com/recaptcha/api.js?render=6LcVm2ErAAAAAJOprChiUWt86XP9BygR_RnHeyaW"></script>
+                  <script
+                    src="https://www.google.com/recaptcha/api.js?render=6LcVm2ErAAAAAJOprChiUWt86XP9BygR_RnHeyaW"
+                    async
+                    defer
+                  ></script>
                 </form>
               </CardContent>
             </Card>
