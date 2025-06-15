@@ -90,8 +90,8 @@ export const validateMessageForm = async (
 
   // Send email
   try {
-    const emailSent = await sendEmail(name, email, message);
-    if (!emailSent) {
+    const errorMessage = await sendEmail(name, email, message);
+    if (errorMessage) {
       throw new Error("Email service returned failure");
     }
 

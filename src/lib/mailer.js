@@ -26,6 +26,6 @@ export const sendEmail = async (senderName, senderEmail, message) => {
       return error.message;
     }
     console.error(error);
-    return error;
+    return error.toString();
   }
 };
