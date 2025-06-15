@@ -55,26 +55,6 @@ export function Contact() {
     initialState,
   );
 
-  // useEffect(() => {
-  //   const loadReCaptcha = () => {
-  //     if (
-  //       document.querySelector("#recaptcha-script") ||
-  //       !process.env.RECAPTCHA_SITE_KEY
-  //     )
-  //       return;
-
-  //     const script = document.createElement("script");
-  //     script.id = "recaptcha-script";
-  //     script.src = `https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq`;
-  //     script.async = true;
-  //     script.defer = true;
-
-  //     document.body.appendChild(script);
-  //   };
-
-  //   loadReCaptcha();
-  // }, []);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -84,9 +64,7 @@ export function Contact() {
         throw new Error("reCAPTCHA not ready");
       }
 
-      await new Promise<void>((resolve) =>
-        window.grecaptcha.ready(() => resolve()),
-      );
+      await new Promise<void>((resolve) => window.grecaptcha.ready(resolve));
 
       const token = await window.grecaptcha.execute(
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
@@ -97,15 +75,9 @@ export function Contact() {
         tokenRef.current.value = token;
       }
 
-      const formData = new FormData(e.currentTarget);
-      formAction(formData);
+      e.currentTarget.submit();
     } catch (error) {
-      console.error("Submission error:", error);
-      if (formRef.current) {
-        formRef.current.dispatchEvent(
-          new Event("submit", { cancelable: true, bubbles: true }),
-        );
-      }
+      console.error("reCAPTCHA error:", error);
     } finally {
       setIsSubmitting(false);
     }
