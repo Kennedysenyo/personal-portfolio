@@ -51,6 +51,7 @@ export function Contact() {
 
   const [state, formAction, isPending] = useActionState(
     validateMessageForm,
+
     initialState,
   );
 
@@ -74,7 +75,6 @@ export function Contact() {
   //   loadReCaptcha();
   // }, []);
 
-  // handle the form submit -- HiJack
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -89,7 +89,7 @@ export function Contact() {
       );
 
       const token = await window.grecaptcha.execute(
-        process.env.RECAPTCHA_SITE_KEY!,
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
         { action: "submit" },
       );
 
@@ -276,17 +276,13 @@ export function Contact() {
                       {state.message}
                     </p>
                   )}
+                  <script src="https://www.google.com/recaptcha/api.js?render=6LcVm2ErAAAAAJOprChiUWt86XP9BygR_RnHeyaW"></script>
                 </form>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
-      <script
-        async
-        defer
-        src="https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq"
-      ></script>
     </section>
   );
 }
