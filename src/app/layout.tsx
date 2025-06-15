@@ -25,7 +25,9 @@ export default function RootLayout({
         >
           <div className="flex min-h-screen flex-col items-center">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex w-full flex-col items-center">
+              {children}
+            </main>
             <Footer />
           </div>
         </ThemeProvider>

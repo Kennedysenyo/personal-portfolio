@@ -1,6 +1,9 @@
 export function About() {
   return (
-    <section id="about" className="bg-muted/50 py-16">
+    <section
+      id="about"
+      className="bg-muted/50 flex w-full justify-center py-16"
+    >
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
