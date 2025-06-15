@@ -282,7 +282,11 @@ export function Contact() {
           </div>
         </div>
       </div>
-      <script src="https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq"></script>
+      <script
+        async
+        defer
+        src="https://www.google.com/recaptcha/api.js?render=6LdrDmArAAAAAJJZmB8jN-Iyiondk6Mz-J9Hu0hq"
+      ></script>
     </section>
   );
 }
