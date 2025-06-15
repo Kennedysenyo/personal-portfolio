@@ -80,22 +80,24 @@ export function Contact() {
     setIsSubmitting(true);
 
     try {
-      if (!window.grecaptcha || !window.grecaptcha.execute) {
-        throw new Error("reCAPTCHA not ready");
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!;
+      const grecaptcha = window.grecaptcha;
+
+      if (!grecaptcha || !grecaptcha.execute || !grecaptcha.ready) {
+        throw new Error("reCAPTCHA not initialized.");
       }
 
-      await new Promise<void>((resolve) => window.grecaptcha.ready(resolve));
+      await new Promise<void>((resolve) => grecaptcha.ready(resolve));
 
-      const token = await window.grecaptcha.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
-        { action: "submit" },
-      );
+      const token = await grecaptcha.execute(siteKey, { action: "submit" });
 
-      if (tokenRef.current) {
-        tokenRef.current.value = token;
-      }
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("email", formData.email);
+      form.append("message", formData.message);
+      form.append("g-recaptcha-response", token);
 
-      e.currentTarget.submit();
+      formAction(form);
     } catch (error) {
       console.error("reCAPTCHA error:", error);
     } finally {
