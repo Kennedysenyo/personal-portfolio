@@ -50,7 +50,7 @@ export function Hero() {
                   <FiLinkedin className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="mailto:kennedysenyo@gmail.com">
+              <Link href="mailto:contact@kencoding.dev">
                 <Button variant="ghost" size="icon" aria-label="Email">
                   <Mail className="h-5 w-5" />
                 </Button>
